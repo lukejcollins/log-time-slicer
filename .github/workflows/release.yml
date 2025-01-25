@@ -80,7 +80,7 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./dist/log-time-slicer
+        asset_path: ./dist/log-time-slicer/log-time-slicer
         asset_name: log-time-slicer
         asset_content_type: application/octet-stream
       env:
@@ -90,7 +90,7 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./dist/log-time-slicer.exe
+        asset_path: ./dist/log-time-slicer.exe/log-time-slicer.exe
         asset_name: log-time-slicer.exe
         asset_content_type: application/octet-stream
       env:
