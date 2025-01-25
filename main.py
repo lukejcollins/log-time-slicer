@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta  # Importing necessary modules for date and time manipulation
+from datetime import datetime, timedelta
 
 
 def read_log_file(file_path):
