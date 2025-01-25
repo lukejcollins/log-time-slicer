@@ -34,7 +34,7 @@ def filter_last_minute_logs(log_data):
     # Get the current date and time
     current_time = datetime.now()
     # Calculate the time three hours ago from now
-    within_three_hours = current_time - timedelta(hours=6)
+    one_hour_ago = current_time - timedelta(hours=1)
     # Initialize an empty list to store filtered logs
     filtered_logs = []
 
@@ -46,7 +46,7 @@ def filter_last_minute_logs(log_data):
             # Convert the timestamp string to a datetime object
             timestamp = datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S.%f')
             # Check if the timestamp is within the last three hours
-            if timestamp >= within_three_hours:
+            if timestamp >= one_hour_ago:
                 # Add the line to the filtered logs list
                 filtered_logs.append(line)
         except ValueError:
