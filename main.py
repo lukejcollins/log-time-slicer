@@ -1,4 +1,5 @@
 import argparse
+import logging
 from datetime import datetime, timedelta
 
 
@@ -7,9 +8,9 @@ def read_log_file(file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
             log_data = file.readlines()
         return log_data
-    except FileNotFoundError:
-        print(f"The file {file_path} does not exist.")
-        return []
+    except FileNotFoundError as e:
+        logging.error("The file %s does not exist.", file_path)
+        raise SystemExit(f"The file {file_path} does not exist.") from e
 
 
 def write_to_export_file(export_path, log_data):
@@ -17,9 +18,9 @@ def write_to_export_file(export_path, log_data):
         with open(export_path, 'w', encoding='utf-8') as file:
             for line in log_data:
                 file.write(line)
-        print(f"Log data successfully written to {export_path}")
+        logging.info("Log data successfully written to %s", export_path)
     except Exception as e:
-        print(f"An error occurred while writing to the file: {e}")
+        logging.error("An error occurred while writing to the file: %s", e)
 
 
 def filter_last_minute_logs(log_data):
@@ -56,6 +57,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process log files.")
     parser.add_argument('log_file_path', type=str, help="Path to the log file")
     parser.add_argument('export_file_path', type=str, help="Path to the export file")
+    parser.add_argument('log_output_path', type=str, help="Path to the log output file")
     args = parser.parse_args()
+
+    logging.basicConfig(filename=args.log_output_path, level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
 
     main(args.log_file_path, args.export_file_path)
