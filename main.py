@@ -1,6 +1,7 @@
 import argparse
 import logging
 import re
+import os
 from datetime import datetime, timedelta
 
 
@@ -53,6 +54,9 @@ def filter_logs_by_timestamp(log_data, regex_pattern, timestamp_format, hours):
 
 
 def main(log_file_path, export_file_path, regex_pattern, timestamp_format, hours):
+    log_file_path = os.path.normpath(log_file_path)
+    export_file_path = os.path.normpath(export_file_path)
+
     log_contents = read_log_file(log_file_path, export_file_path)
 
     if log_contents:
@@ -86,7 +90,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     logging.basicConfig(
-        filename=args.log_output_path, level=logging.INFO,
+        filename=os.path.normpath(args.log_output_path), level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s'
     )
 
