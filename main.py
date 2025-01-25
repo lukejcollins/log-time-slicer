@@ -27,12 +27,12 @@ def write_to_export_file(export_path, log_data):
         logging.error("An error occurred while writing to the file: %s", e)
 
 
-def filter_logs_by_timestamp(log_data, regex_pattern, timestamp_format):
+def filter_logs_by_timestamp(log_data, regex_pattern, timestamp_format, hours):
     if not log_data:
         return []
 
     current_time = datetime.now()
-    one_hour_ago = current_time - timedelta(hours=1)
+    time_threshold = current_time - timedelta(hours=hours)
     filtered_logs = []
 
     for line in log_data:
@@ -43,8 +43,8 @@ def filter_logs_by_timestamp(log_data, regex_pattern, timestamp_format):
                 timestamp_str = match.group(0)
                 # Convert the timestamp string to a datetime object
                 timestamp = datetime.strptime(timestamp_str, timestamp_format)
-                # Check if the timestamp is within the last hour
-                if timestamp >= one_hour_ago:
+                # Check if the timestamp is within the specified time range
+                if timestamp >= time_threshold:
                     filtered_logs.append(line)
         except ValueError:
             continue
@@ -52,12 +52,12 @@ def filter_logs_by_timestamp(log_data, regex_pattern, timestamp_format):
     return filtered_logs
 
 
-def main(log_file_path, export_file_path, regex_pattern, timestamp_format):
+def main(log_file_path, export_file_path, regex_pattern, timestamp_format, hours):
     log_contents = read_log_file(log_file_path, export_file_path)
 
     if log_contents:
         filtered_logs = filter_logs_by_timestamp(log_contents, regex_pattern,
-                                                 timestamp_format)
+                                                 timestamp_format, hours)
         write_to_export_file(export_file_path, filtered_logs)
     else:
         write_to_export_file(export_file_path, [])
@@ -80,6 +80,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '--timestamp_format', type=str, required=True, help="Timestamp format parsing"
     )
+    parser.add_argument(
+        '--hours', type=int, required=True, help="Number of hours to look back"
+    )
     args = parser.parse_args()
 
     logging.basicConfig(
@@ -88,4 +91,4 @@ if __name__ == "__main__":
     )
 
     main(args.log_file_path, args.export_file_path, args.regex_pattern,
-         args.timestamp_format)
+         args.timestamp_format, args.hours)
